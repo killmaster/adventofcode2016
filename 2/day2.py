@@ -9,7 +9,6 @@ matrix2 = [['E','E','1','E','E'],
            ['E','E','D','E','E']]
 position = [1,1]
 position2 = [2,0]
-print(matrix2[2][0])
 
 def part1(lines, position):
     result = []
