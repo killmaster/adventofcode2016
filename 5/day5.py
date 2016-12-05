@@ -8,8 +8,8 @@ hashed = []
 index = 0
 
 def hacking_in_progress(password, hashed, index):
-    if index % 30000:
-        sys.stdout.write('password: {} cracking hash: {}\r'.format(''.join(password),hashed))
+    if index % 30000 == 0:
+        sys.stdout.write('password: {}\tcracking hash: {}\r'.format(''.join(password),hashed))
         sys.stdout.flush()
 
 def valid(h):
@@ -39,19 +39,25 @@ def part1(doorid):
 
 def part2(doorid):
     global index
-    password = ['-1','-1','-1','-1','-1','-1','-1','-1']
+    password = ['_','_','_','_','_','_','_','_']
     result = doorid
     for h in hashed:
         hacking_in_progress(password,result,index)
-        if inbounds(h) and password[int(h[5])] == '-1':
+        if inbounds(h) and password[int(h[5])] == '_':
             password[int(h[5])] = h[6]
-    while '-1' in password:
+    while '_' in password:
         hacking_in_progress(password, result, index)
         result = hashlib.md5((doorid+str(index)).encode()).hexdigest()
-        if valid(result) and inbounds(result) and password[int(result[5])] == '-1':
+        if valid(result) and inbounds(result) and password[int(result[5])] == '_':
             password[int(result[5])] = result[6]
         index+=1
     return ''.join(password)
 
-print(part1(doorid))
-print(part2(doorid))
+part1 = part1(doorid)
+sys.stdout.write('password: {}\r'.format(part1))
+sys.stdout.flush()
+print('\npassword 1: {}\r'.format(part1))
+part2 = part2(doorid)
+sys.stdout.write('password: {}\r'.format(part2))
+sys.stdout.flush()
+print('\npassword 2: {}\r'.format(part2))
