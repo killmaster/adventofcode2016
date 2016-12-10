@@ -11,10 +11,12 @@ bots = collections.OrderedDict()
 for line in lines:
     if rule1.match(line):
         botid = rule1.match(line).group(2)
-        value = rule1.match(line).group(1)
+        value = int(rule1.match(line).group(1))
         if botid in bots:
             if 'value1' in bots[botid]:
                 bots[botid]['value2'] = value
+            else:
+                bots[botid]['value1'] = value
         else:
             bots[botid] = {}
             bots[botid]['value1'] = value
@@ -34,28 +36,23 @@ for line in lines:
         if id2.startswith('output') and id2 not in bots:
             bots[id2] = []
         
-        '''
-        if rule2.match(line).group(2) == 'bot':
-            bots[botid]['rule'].append(rule2.match(line).group(3))
-        if rule2.match(line).group(4) == 'bot':
-            bots[botid]['rule'].append(rule2.match(line).group(5))
-        if rule2.match(line).group(2) == 'output':
-            bots[botid]['rule'].append('output'.join(rule2.match(line).group(3)))
-        if rule2.match(line).group(4) == 'output':
-            bots[botid]['rule'].append('output'.join(rule2.match(line).group(5)))
-        '''
-
 def give(botid, value):
     if 'value1' in bots[botid]:
         bots[botid]['value2'] = value
     else:
         bots[botid]['value1'] = value
+    #print('{} {}'.format(botid,value))
 
 def part1(bots):
-    while True:
+    flag = True
+    found = False
+    while flag:
+        flag = False
         for k,v in bots.items():
+            #print('{} {}'.format(k,v))
             if 'value2' in v:
-                values = sorted([int(v['value1']), int(v['value2'])])
+                flag = True
+                values = sorted([v.pop('value1'), v.pop('value2')])
                 #print(v['rule'])
                 if v['rule'][0].startswith('output'):
                     bots[v['rule'][0]].append(values[0])
@@ -65,11 +62,8 @@ def part1(bots):
                     bots[v['rule'][1]].append(values[1])
                 else:
                     give(v['rule'][1], values[1]) 
-                if values == [17,61]:
-                    return k
-
-print(bots)
-print(part1(bots))
-print(bots['output 0'])
-print(bots['output 1'])
-print(bots['output 2'])
+                if values == [17,61] and not found:
+                    print(k)
+                    found = True
+part1(bots)
+print(bots['output 0'][0] * bots['output 1'][0] * bots['output 2'][0])
