@@ -132,8 +132,8 @@ def bfs2(floors):
             if final(node):
                 print(node.cost)
 
-#bfs(floors)
-bfs2(floors)
+bfs(floors)
+#bfs2(floors)
 
 
   
